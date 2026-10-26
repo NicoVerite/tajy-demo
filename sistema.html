@@ -433,8 +433,8 @@ if (!S) S = seed();
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast('No se pudo guardar en este navegador (los cambios valen hasta cerrar la página).'); } }
 // Perfiles sin contraseña (demo): cada uno ve solo lo suyo. El perfil elegido se recuerda en este navegador.
 const PERF = {
-  duena: ['Dueña', ['duena', 'cobros', 'reservas', 'rack', 'recepcion', 'caja', 'huespedes', 'conserjeria', 'limpieza', 'finanzas', 'pagos', 'stock', 'web', 'asistente', 'config']],
-  gerente: ['Gerente', ['reservas', 'rack', 'huespedes', 'conserjeria', 'stock', 'pagos']],
+  duena: ['Dueño', ['duena', 'cobros', 'reservas', 'rack', 'recepcion', 'caja', 'huespedes', 'conserjeria', 'limpieza', 'finanzas', 'pagos', 'stock', 'web', 'asistente', 'config']],
+  gerente: ['Gerencia', ['reservas', 'rack', 'huespedes', 'conserjeria', 'stock', 'pagos']],
   recepcion: ['Recepción', ['recepcion', 'rack', 'caja', 'cobros']],
   limpieza: ['Limpieza', ['limpieza']],
 };
@@ -821,7 +821,7 @@ function cleanCard({r, p, j, done}) {
 }
 function vClean() {
   const L = cleanList(), inc = S.incid.filter(i => !i.done);
-  return `<h2>Limpieza</h2><p class="hint">Pensada para una tablet en el office. Cada mucama toca su nombre, después «Empecé» y «Terminé». Recepción ve el avance al instante.</p>
+  return `<h2>Limpieza</h2><p class="hint">Se usa desde el celular o una tablet. Cada persona de limpieza toca su nombre, después «Empecé» y «Terminé». Recepción ve el avance al instante.</p>
   <div class="toolbar"><span class="seg" role="group" aria-label="Cómo se ve"><button class="${PH ? '' : 'on'}" onclick="PH=0;render()">Pantalla</button><button class="${PH ? 'on' : ''}" onclick="PH=1;render()">Ver en tablet</button></span></div>
   <div class="big ${PH ? 'tablet' : ''}" id="cleanWrap">
     <div class="who-muc"><span>¿Quién sos?</span>${MUC.map(m => `<button class="tick ${S.muc === m ? 'on' : ''}" aria-pressed="${S.muc === m}" onclick="S.muc='${m}';save();render()">${m}</button>`).join('')}</div>
@@ -840,7 +840,7 @@ function cEnd(n, force) {
   S.stock.forEach(i => { if (i.use) i.qty = Math.max(0, Math.round((i.qty - i.use) * 10) / 10); }); // cada habitación terminada descuenta insumos
   j.min = ago(j.t0); S.rooms.find(r => r.n === n).dirty = false; save(); render(); toast(`Hab. ${n} lista en ${j.min} min. Recepción ya la ve.`);
 }
-const quick = (n, title, opts, kind, pre) => modal(`<h3>Hab. ${n} · ${title}</h3><p class="hint">Tocá una opción y listo: le llega a recepción y a la dueña.</p>
+const quick = (n, title, opts, kind, pre) => modal(`<h3>Hab. ${n} · ${title}</h3><p class="hint">Tocá una opción y listo: le llega a recepción y a la administración.</p>
   <div class="ticks">${opts.map(o => `<button class="tick" onclick="addInc(${n},'${pre}${o}','${kind}')">${o}</button>`).join('')}</div>
   <form class="form" style="margin-top:14px" onsubmit="event.preventDefault();addInc(${n},'${pre}'+this.t.value.trim(),'${kind}')"><label>Otra cosa<input name="t" required maxlength="60"></label><div class="row" style="margin:0"><button class="btn sm">Avisar</button><button type="button" class="btn sec sm" onclick="closeM()">Cancelar</button></div></form>`);
 const cBroke = n => quick(n, 'algo roto', ['No enfría el aire', 'Gotea la canilla', 'No anda la tele', 'Lámpara quemada', 'Inodoro tapado'], 'rotura', '');
@@ -1094,7 +1094,7 @@ function totHtml(m) {
 }
 const CASH = Object.keys(DEN);
 const CAT_IN = ['Estadía', 'Seña', 'Saldo', 'Extras (minibar, lavandería)', 'Otros ingresos'];
-const CAT_OUT = ['Proveedores', 'Compras del día', 'Sueldos y adelantos', 'Mantenimiento', 'Retiro de la dueña', 'Otros gastos'];
+const CAT_OUT = ['Proveedores', 'Compras del día', 'Sueldos y adelantos', 'Mantenimiento', 'Retiro del dueño', 'Otros gastos'];
 const toARS = (m, n) => n * FX[m]();
 // Todo cobro queda registrado; si es efectivo entra además a la caja del turno en su moneda. Tarjetas y transferencias quedan "por acreditar".
 function ingreso(t, cat, pay, ars) {
@@ -1182,7 +1182,7 @@ const TOUR = [
   ['limpieza', '#cleanWrap', 'Limpieza, en una tablet: Empecé y Terminé.'],
   ['caja', '#cashCard', 'Contás los billetes y te dice si falta o sobra.'],
   ['finanzas', '#lead', 'Cuánta plata queda, en una frase.'],
-  ['duena', '#resetBtn', 'Probá tranquila, no se rompe nada. Con este botón vuelve todo a cero.'],
+  ['duena', '#resetBtn', 'Probá sin miedo, no se rompe nada. Con este botón vuelve todo a cero.'],
 ];
 let T = -1;
 function tour(i) {
